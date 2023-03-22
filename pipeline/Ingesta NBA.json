@@ -19,7 +19,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT *\nFROM INFORMATION_TABLE_NAME\nWHEN TABLE_SCHEMA == 'dbo'",
+						"sqlReaderQuery": "SELECT *\nFROM DB_NBA.INFORMATION_SCHEMA.TABLES\nWHEN TABLE_SCHEMA == 'dbo'",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -31,6 +31,14 @@
 				}
 			}
 		],
+		"parameters": {
+			"Contenedor": {
+				"type": "string"
+			},
+			"Carpeta": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "Integrador Chris Redfield"
 		},
