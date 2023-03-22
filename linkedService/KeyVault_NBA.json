@@ -1,12 +1,12 @@
 {
 	"name": "KeyVault_NBA",
-	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"description": "Linked Service de la Key Bault para la base de datos NBA",
 		"annotations": [],
 		"type": "AzureKeyVault",
 		"typeProperties": {
-			"baseUrl": "https://keyvault-formacion.vault.azure.net/"
+			"baseUrl": "https://KeyVault-ChrisRedfield.vault.azure.net/"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
 }
