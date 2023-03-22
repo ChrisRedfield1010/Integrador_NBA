@@ -1,0 +1,41 @@
+{
+	"name": "Ingesta NBA",
+	"properties": {
+		"description": "Pipeline encargado de hacer la ingesta de datos de las tablas de la base de datos del NBA.",
+		"activities": [
+			{
+				"name": "NombreTabla",
+				"description": "Lookup encargado de buscar los nombres de las tablas de la base de datos de la NBA",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT *\nFROM INFORMATION_TABLE_NAME\nWHEN TABLE_SCHEMA == 'dbo'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "NBA_ChrisRedfield",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"folder": {
+			"name": "Integrador Chris Redfield"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-22T06:37:55Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

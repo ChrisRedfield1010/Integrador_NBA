@@ -1,0 +1,9 @@
+{
+	"name": "ADF-Integrador",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "a07ed2b6-e393-4684-a578-9fb588e04f88",
+		"tenantId": "3048dc87-43f0-4100-9acb-ae1971c79395"
+	}
+}

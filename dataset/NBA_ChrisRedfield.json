@@ -1,0 +1,16 @@
+{
+	"name": "NBA_ChrisRedfield",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "NBA_Database",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Chris Redfield Datasets"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
