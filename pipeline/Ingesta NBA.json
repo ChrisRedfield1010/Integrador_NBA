@@ -127,7 +127,7 @@
 		"parameters": {
 			"Contenedor": {
 				"type": "string",
-				"defaultValue": "Chris-Redfield-Integrador"
+				"defaultValue": "chris-redfield-integrador"
 			},
 			"Carpeta": {
 				"type": "string",
