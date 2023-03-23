@@ -34,7 +34,14 @@
 				"name": "Repetir",
 				"description": "ForEach que repite la copia de las tablas de la base de datos NBA y las guarda en una carpeta de mi container.",
 				"type": "ForEach",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "NombreTabla",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
