@@ -303,9 +303,12 @@
 													"value": "@pipeline().parameters.Contenedor",
 													"type": "Expression"
 												},
-												"Carpeta": "CarpetaPrueba",
+												"Carpeta": {
+													"value": "@utcnow()",
+													"type": "Expression"
+												},
 												"Archivo": {
-													"value": "@concat(item().table_schema, item().table_name,'.csv')",
+													"value": "@concat(item().table_schema, '.', item().table_name,'.csv')",
 													"type": "Expression"
 												}
 											}
