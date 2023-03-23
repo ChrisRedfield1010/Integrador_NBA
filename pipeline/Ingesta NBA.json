@@ -110,10 +110,7 @@
 									"referenceName": "Tablas_CSV",
 									"type": "DatasetReference",
 									"parameters": {
-										"Container": {
-											"value": "@pipeline().parameters.Contenedor",
-											"type": "Expression"
-										},
+										"Container": "Chris-Redfield-Integrador",
 										"Carpeta": {
 											"value": "@utcnow()",
 											"type": "Expression"

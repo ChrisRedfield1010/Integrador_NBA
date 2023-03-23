@@ -7,8 +7,7 @@
 		},
 		"parameters": {
 			"Container": {
-				"type": "string",
-				"defaultValue": "Chris-Redfield-Integrador"
+				"type": "string"
 			},
 			"Carpeta": {
 				"type": "string"
