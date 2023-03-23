@@ -29,14 +29,108 @@
 					},
 					"firstRowOnly": false
 				}
+			},
+			{
+				"name": "Repetir",
+				"description": "ForEach que repite la copia de las tablas de la base de datos NBA y las guarda en una carpeta de mi container.",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('NombreTabla').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "CopiarTabla",
+							"description": "Copia las tablas de la base de datos NBA y las guarda en una carpeta de mi container.",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".csv"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "NBA_Database_Parametrizado",
+									"type": "DatasetReference",
+									"parameters": {
+										"Esquema": {
+											"value": "@item().table_schema",
+											"type": "Expression"
+										},
+										"Tabla": {
+											"value": "@item().table_name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Tablas_CSV",
+									"type": "DatasetReference",
+									"parameters": {
+										"Container": {
+											"value": "@pipeline().parameters.Contenedor",
+											"type": "Expression"
+										},
+										"Carpeta": {
+											"value": "@utcnow()",
+											"type": "Expression"
+										},
+										"Archivo": {
+											"value": "@concat(item().table_schema, item().table_name,'.csv')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
 			}
 		],
 		"parameters": {
 			"Contenedor": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Chris-Redfield-Integrador"
 			},
 			"Carpeta": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "TablasNBA"
 			}
 		},
 		"folder": {
