@@ -141,8 +141,7 @@
 				},
 				"parameters": {
 					"Container": {
-						"type": "string",
-						"defaultValue": "Chris-Redfield-Integrador"
+						"type": "string"
 					},
 					"Carpeta": {
 						"type": "string"
@@ -294,10 +293,7 @@
 											"referenceName": "Tablas_CSV",
 											"type": "DatasetReference",
 											"parameters": {
-												"Container": {
-													"value": "@pipeline().parameters.Contenedor",
-													"type": "Expression"
-												},
+												"Container": "Chris-Redfield-Integrador",
 												"Carpeta": {
 													"value": "@utcnow()",
 													"type": "Expression"
