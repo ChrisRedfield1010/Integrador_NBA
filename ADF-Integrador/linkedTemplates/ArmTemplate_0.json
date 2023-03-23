@@ -201,7 +201,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT *\nFROM DB_NBA.INFORMATION_SCHEMA.TABLES\nWHERE TABLE_SCHEMA = 'dbo'",
+								"sqlReaderQuery": "SELECT *\nFROM DB_NBA.INFORMATION_SCHEMA.TABLES\nWHERE TABLE_SCHEMA = 'dbo' AND TABLE_TYPE = 'BASE TABLE'",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
