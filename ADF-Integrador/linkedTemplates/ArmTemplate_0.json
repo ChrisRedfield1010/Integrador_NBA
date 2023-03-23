@@ -33,7 +33,7 @@
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "Data Lake dónde se guardarán las tablas del NBA.",
+				"description": "Data Lake para guardar las tablas del NBA",
 				"annotations": [],
 				"type": "AzureBlobFS",
 				"typeProperties": {
