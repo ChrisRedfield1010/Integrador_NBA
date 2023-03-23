@@ -143,7 +143,10 @@
 											"referenceName": "Tablas_CSV",
 											"type": "DatasetReference",
 											"parameters": {
-												"Container": "Chris-Redfield-Integrador",
+												"Container": {
+													"value": "@pipeline().parameters.Contenedor",
+													"type": "Expression"
+												},
 												"Carpeta": "CarpetaPrueba",
 												"Archivo": {
 													"value": "@concat(item().table_schema, item().table_name,'.csv')",
@@ -168,7 +171,7 @@
 					},
 					"Carpeta": {
 						"type": "string",
-						"defaultValue": "TablasNBA"
+						"defaultValue": "Raw"
 					}
 				},
 				"folder": {
@@ -221,6 +224,9 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "Chris Redfield Datasets"
+				},
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [],
@@ -258,6 +264,9 @@
 					"Archivo": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "Chris Redfield Datasets"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
