@@ -7,9 +7,17 @@
 			"metadata": "Nombre de instancia de Data Factory",
 			"defaultValue": "ADF-Integrador"
 		},
+		"Data_Lake_NBA_accountKey": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"accountKey\"de \"Data_Lake_NBA\""
+		},
 		"NBA_Database_connectionString": {
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"connectionString\"de \"NBA_Database\""
+		},
+		"Data_Lake_NBA_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://formacionanalitica.dfs.core.windows.net/"
 		},
 		"KeyVault_NBA_properties_typeProperties_baseUrl": {
 			"type": "string",
@@ -42,8 +50,14 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"Data_Lake_NBA_accountKey": {
+						"value": "[parameters('Data_Lake_NBA_accountKey')]"
+					},
 					"NBA_Database_connectionString": {
 						"value": "[parameters('NBA_Database_connectionString')]"
+					},
+					"Data_Lake_NBA_properties_typeProperties_url": {
+						"value": "[parameters('Data_Lake_NBA_properties_typeProperties_url')]"
 					},
 					"KeyVault_NBA_properties_typeProperties_baseUrl": {
 						"value": "[parameters('KeyVault_NBA_properties_typeProperties_baseUrl')]"

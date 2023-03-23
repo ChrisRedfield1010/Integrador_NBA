@@ -5,8 +5,14 @@
 		"factoryName": {
 			"value": "ADF-Integrador"
 		},
+		"Data_Lake_NBA_accountKey": {
+			"value": ""
+		},
 		"NBA_Database_connectionString": {
 			"value": ""
+		},
+		"Data_Lake_NBA_properties_typeProperties_url": {
+			"value": "https://formacionanalitica.dfs.core.windows.net/"
 		},
 		"KeyVault_NBA_properties_typeProperties_baseUrl": {
 			"value": "https://KeyVault-ChrisRedfield.vault.azure.net/"

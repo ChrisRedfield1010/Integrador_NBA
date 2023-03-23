@@ -7,9 +7,17 @@
 			"metadata": "Nombre de instancia de Data Factory",
 			"defaultValue": "ADF-Integrador"
 		},
+		"Data_Lake_NBA_accountKey": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"accountKey\"de \"Data_Lake_NBA\""
+		},
 		"NBA_Database_connectionString": {
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"connectionString\"de \"NBA_Database\""
+		},
+		"Data_Lake_NBA_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://formacionanalitica.dfs.core.windows.net/"
 		},
 		"KeyVault_NBA_properties_typeProperties_baseUrl": {
 			"type": "string",
@@ -20,6 +28,24 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Data_Lake_NBA')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Data Lake dónde se guardarán las tablas del NBA.",
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('Data_Lake_NBA_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('Data_Lake_NBA_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/KeyVault_NBA')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -70,6 +96,90 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/NBA_Database_Parametrizado')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "NBA_Database",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Esquema": {
+						"type": "string"
+					},
+					"Tabla": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().Esquema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().Tabla",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/NBA_Database')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Tablas_CSV')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Data_Lake_NBA",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Container": {
+						"type": "string",
+						"defaultValue": "Chris-Redfield-Integrador"
+					},
+					"Carpeta": {
+						"type": "string"
+					},
+					"Archivo": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().Archivo",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().Carpeta",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().Container",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Data_Lake_NBA')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Ingesta NBA')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -103,6 +213,105 @@
 							},
 							"firstRowOnly": false
 						}
+					},
+					{
+						"name": "Repetir",
+						"description": "ForEach que repite la copia de las tablas de la base de datos NBA y las guarda en una carpeta de mi container.",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "NombreTabla",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('NombreTabla').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "CopiarTabla",
+									"description": "Copia las tablas de la base de datos NBA y las guarda en una carpeta de mi container.",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".csv"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "NBA_Database_Parametrizado",
+											"type": "DatasetReference",
+											"parameters": {
+												"Esquema": {
+													"value": "@item().table_schema",
+													"type": "Expression"
+												},
+												"Tabla": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "Tablas_CSV",
+											"type": "DatasetReference",
+											"parameters": {
+												"Container": {
+													"value": "@pipeline().parameters.Contenedor",
+													"type": "Expression"
+												},
+												"Carpeta": {
+													"value": "@utcnow()",
+													"type": "Expression"
+												},
+												"Archivo": {
+													"value": "@concat(item().table_schema, item().table_name,'.csv')",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
 					}
 				],
 				"policy": {
@@ -111,10 +320,12 @@
 				},
 				"parameters": {
 					"Contenedor": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "Chris-Redfield-Integrador"
 					},
 					"Carpeta": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "TablasNBA"
 					}
 				},
 				"folder": {
@@ -124,7 +335,9 @@
 				"lastPublishTime": "2023-03-22T06:37:55Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/NBA_ChrisRedfield')]"
+				"[concat(variables('factoryId'), '/datasets/NBA_ChrisRedfield')]",
+				"[concat(variables('factoryId'), '/datasets/NBA_Database_Parametrizado')]",
+				"[concat(variables('factoryId'), '/datasets/Tablas_CSV')]"
 			]
 		}
 	]
