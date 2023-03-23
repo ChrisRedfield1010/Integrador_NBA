@@ -111,10 +111,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"Container": "Chris-Redfield-Integrador",
-										"Carpeta": {
-											"value": "@utcnow()",
-											"type": "Expression"
-										},
+										"Carpeta": "CarpetaPrueba",
 										"Archivo": {
 											"value": "@concat(item().table_schema, item().table_name,'.csv')",
 											"type": "Expression"
