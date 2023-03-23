@@ -136,8 +136,7 @@
 				"defaultValue": "chris-redfield-integrador"
 			},
 			"Carpeta": {
-				"type": "string",
-				"defaultValue": "Raw"
+				"type": "string"
 			}
 		},
 		"folder": {
