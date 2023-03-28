@@ -1,0 +1,82 @@
+{
+	"name": "Orquestacion NBA",
+	"properties": {
+		"description": "Pipeline orquestador del trabajo integrador NBA.",
+		"activities": [
+			{
+				"name": "Ingesta NBA",
+				"description": "Ejecuta el Pipeline \"Ingesta NBA\"",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Ingesta NBA",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Raw-Trusted",
+				"description": "Notebook que limpia las tablas del DataLake.",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Ingesta NBA",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/chris_san11@hotmail.com/Raw-Trusted"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_NBA",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Trusted-Refined",
+				"description": "Notebook que guarda en la base de datos, las tablas listas para su análisis.",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Raw-Trusted",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/chris_san11@hotmail.com/Trusted-Refined"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_NBA",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "Integrador Chris Redfield"
+		},
+		"annotations": []
+	}
+}
