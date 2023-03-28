@@ -7,6 +7,10 @@
 			"metadata": "Nombre de instancia de Data Factory",
 			"defaultValue": "ADF-Integrador"
 		},
+		"AzureDatabricks_NBA_accessToken": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"accessToken\"de \"AzureDatabricks_NBA\""
+		},
 		"Data_Lake_NBA_accountKey": {
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"accountKey\"de \"Data_Lake_NBA\""
@@ -14,6 +18,10 @@
 		"NBA_Database_connectionString": {
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"connectionString\"de \"NBA_Database\""
+		},
+		"AzureDatabricks_NBA_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0315-131400-v6luecx0"
 		},
 		"Data_Lake_NBA_properties_typeProperties_url": {
 			"type": "string",
@@ -189,6 +197,99 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Orquestacion NBA')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Pipeline orquestador del trabajo integrador NBA.",
+				"activities": [
+					{
+						"name": "Ingesta NBA",
+						"description": "Ejecuta el Pipeline \"Ingesta NBA\"",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Ingesta NBA",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Raw-Trusted",
+						"description": "Notebook que limpia las tablas del DataLake.",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Ingesta NBA",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/chris_san11@hotmail.com/Raw-Trusted"
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureDatabricks_NBA",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Trusted-Refined",
+						"description": "Notebook que guarda en la base de datos, las tablas listas para su análisis.",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Raw-Trusted",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/chris_san11@hotmail.com/Trusted-Refined"
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureDatabricks_NBA",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Integrador Chris Redfield"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Ingesta NBA')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureDatabricks_NBA')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/NBA_ChrisRedfield')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -298,6 +399,25 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Data_Lake_NBA')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDatabricks_NBA')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Linked Service para las notebooks del NBA.",
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-7873050881736469.9.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDatabricks_NBA_accessToken')]"
+					},
+					"existingClusterId": "[parameters('AzureDatabricks_NBA_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Data_Lake_NBA')]",

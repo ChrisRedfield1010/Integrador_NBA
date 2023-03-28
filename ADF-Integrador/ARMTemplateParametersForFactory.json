@@ -5,11 +5,17 @@
 		"factoryName": {
 			"value": "ADF-Integrador"
 		},
+		"AzureDatabricks_NBA_accessToken": {
+			"value": ""
+		},
 		"Data_Lake_NBA_accountKey": {
 			"value": ""
 		},
 		"NBA_Database_connectionString": {
 			"value": ""
+		},
+		"AzureDatabricks_NBA_properties_typeProperties_existingClusterId": {
+			"value": "0315-131400-v6luecx0"
 		},
 		"Data_Lake_NBA_properties_typeProperties_url": {
 			"value": "https://formacionanalitica.dfs.core.windows.net/"

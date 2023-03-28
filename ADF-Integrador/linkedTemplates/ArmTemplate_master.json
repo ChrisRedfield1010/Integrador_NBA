@@ -7,6 +7,10 @@
 			"metadata": "Nombre de instancia de Data Factory",
 			"defaultValue": "ADF-Integrador"
 		},
+		"AzureDatabricks_NBA_accessToken": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"accessToken\"de \"AzureDatabricks_NBA\""
+		},
 		"Data_Lake_NBA_accountKey": {
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"accountKey\"de \"Data_Lake_NBA\""
@@ -14,6 +18,10 @@
 		"NBA_Database_connectionString": {
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"connectionString\"de \"NBA_Database\""
+		},
+		"AzureDatabricks_NBA_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0315-131400-v6luecx0"
 		},
 		"Data_Lake_NBA_properties_typeProperties_url": {
 			"type": "string",
@@ -50,11 +58,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AzureDatabricks_NBA_accessToken": {
+						"value": "[parameters('AzureDatabricks_NBA_accessToken')]"
+					},
 					"Data_Lake_NBA_accountKey": {
 						"value": "[parameters('Data_Lake_NBA_accountKey')]"
 					},
 					"NBA_Database_connectionString": {
 						"value": "[parameters('NBA_Database_connectionString')]"
+					},
+					"AzureDatabricks_NBA_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('AzureDatabricks_NBA_properties_typeProperties_existingClusterId')]"
 					},
 					"Data_Lake_NBA_properties_typeProperties_url": {
 						"value": "[parameters('Data_Lake_NBA_properties_typeProperties_url')]"
