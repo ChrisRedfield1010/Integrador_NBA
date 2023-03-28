@@ -1,0 +1,14 @@
+{
+	"name": "AzureDatabricks_NBA",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Linked Service para las notebooks del NBA.",
+		"annotations": [],
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://adb-7873050881736469.9.azuredatabricks.net",
+			"existingClusterId": "0315-131400-v6luecx0",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEM4MjczMzI5LTlGQkItNDI1MC1CNURGLUZENkY1RENCMEI0Rl8wYTNjZTQ3MS01MjFlLTRhNDYtODliNy1iZmY4MWVlMGFiZWUiDQp9"
+		}
+	}
+}
